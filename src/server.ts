@@ -16,7 +16,7 @@ const server = app.listen(4000, () => {
 })
 
 sequelize.sync().then(() => {
-  console.log('Database synchronized')
+  //console.log('Database synchronized')
 })
 
 export { app, server }

@@ -1,12 +1,14 @@
 import request from 'supertest'
 import  { app, server } from '../server'
 import UserService from '../services/UserService'
+import sequelize from '../config/db'
 
 jest.mock('../services/UserService')
 
 describe('UserController - createUser', () => {
     afterAll(() => {
         server.close()
+        sequelize.close();
       });
   it('should return 400 if validation fails', async () => {
     const invalidUserData = {
