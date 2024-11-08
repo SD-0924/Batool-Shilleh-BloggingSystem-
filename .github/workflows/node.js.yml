@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js CI with Docker
 
 on:
   push:
@@ -10,10 +10,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    services:
+      # إعداد خدمة Docker (قاعدة بيانات MySQL مثلاً)
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: blogging_system
+        options: --health-cmd="mysqladmin ping --silent" --health-start-period=10s --health-retries=5
+        # تأكد من أن الخدمة جاهزة للاتصال قبل تنفيذ الاختبارات
 
     steps:
       - uses: actions/checkout@v4
@@ -25,13 +32,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      # Set environment variables for DB connection (you can set these in GitHub Secrets)
+      # Set environment variables for DB connection
       - name: Set up environment variables
         run: |
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
-          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+          echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
+          echo "DB_USER=root" >> $GITHUB_ENV
+          echo "DB_PASSWORD=rootpassword" >> $GITHUB_ENV
+          echo "DB_NAME=blogging_system" >> $GITHUB_ENV
 
       # Install dependencies
       - run: npm ci
@@ -39,5 +46,5 @@ jobs:
       # Build the project if a build step is present
       - run: npm run build --if-present
 
-      # Run tests
+      # Run tests (فحص الاتصال بقاعدة البيانات أثناء الاختبارات)
       - run: npm test
