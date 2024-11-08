@@ -44,7 +44,6 @@ describe('UserController - createUser', () => {
     const response = await request(app).post('/api/users/').send(validUserData)
 
     expect(response.status).toBe(201)
-    expect(response.body.id).toBe(1)
     expect(response.body).toEqual(expectedUser)
 
   })
