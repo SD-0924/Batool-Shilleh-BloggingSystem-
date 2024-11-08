@@ -16,6 +16,7 @@ describe('PostController - createPost', () => {
 
   afterAll(() => {
     serverInstance.close()
+    server.close()
     sequelize.close()
   })
 

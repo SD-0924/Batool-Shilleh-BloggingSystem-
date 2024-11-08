@@ -16,7 +16,7 @@ describe('UserController - createUser', () => {
     afterAll(() => {
         serverInstance.close()
         sequelize.close();
-      });
+      })
   it('should return 400 if validation fails', async () => {
     const invalidUserData = {
       username: '', 
