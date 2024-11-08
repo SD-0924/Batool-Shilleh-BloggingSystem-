@@ -6,8 +6,16 @@ import sequelize from '../config/db'
 jest.mock('../services/PostService')
 
 describe('PostController - createPost', () => {
+  let serverInstance
+
+  beforeAll(() => {
+    serverInstance = app.listen(5000, () => {
+      console.log('Server is running on port 5000')
+    })
+  })
+
   afterAll(() => {
-    server.close()
+    serverInstance.close()
     sequelize.close()
   })
 

@@ -6,8 +6,15 @@ import sequelize from '../config/db'
 jest.mock('../services/UserService')
 
 describe('UserController - createUser', () => {
+  let serverInstance
+
+  beforeAll(() => {
+    serverInstance = app.listen(7000, () => {
+      console.log('Server is running on port 7000')
+    })
+  })
     afterAll(() => {
-        server.close()
+        serverInstance.close()
         sequelize.close();
       });
   it('should return 400 if validation fails', async () => {
