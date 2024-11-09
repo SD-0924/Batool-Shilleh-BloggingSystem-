@@ -1,6 +1,8 @@
 import { DataTypes, Model, Optional } from 'sequelize'
 import sequelize from '../config/db'
 import { User } from './User'
+import { Category } from './categoryModel'
+import  {Comment}  from './commentModel'
 
 interface PostAttributes {
   id: number
@@ -50,5 +52,14 @@ Post.init(
 
 User.hasMany(Post, { foreignKey: 'userId' })
 Post.belongsTo(User, { foreignKey: 'userId' })
+
+Post.belongsToMany(Category, { through: 'PostCategories' })
+Category.belongsToMany(Post, { through: 'PostCategories' })
+
+User.hasMany(Post, { foreignKey: 'userId' })
+Post.belongsTo(User, { foreignKey: 'userId' })
+
+Post.hasMany(Comment, { foreignKey: 'postId' })
+Comment.belongsTo(Post, { foreignKey: 'postId' })
 
 export { Post }
