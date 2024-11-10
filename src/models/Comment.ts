@@ -1,22 +1,22 @@
-import { DataTypes, Model, Optional } from 'sequelize'
-import sequelize from '../config/db'
-import { User } from './User'
-import { Post } from './Post'
+import { DataTypes, Model, Optional } from 'sequelize';
+import sequelize from '../config/db';
+import { User } from './User';
+import { Post } from './Post';
 
 interface CommentAttributes {
   id: number;
-  content: string
-  postId: number
-  userId: number
+  content: string;
+  postId: number;
+  userId: number;
 }
 
 interface CommentCreationAttributes extends Optional<CommentAttributes, 'id'> {}
 
 class Comment extends Model<CommentAttributes, CommentCreationAttributes> implements CommentAttributes {
   public id!: number;
-  public content!: string
-  public postId!: number
-  public userId!: number
+  public content!: string;
+  public postId!: number;
+  public userId!: number;
 }
 
 Comment.init(
@@ -51,11 +51,6 @@ Comment.init(
     sequelize,
     tableName: 'comments',
   }
-)
+);
 
-Post.hasMany(Comment, { foreignKey: 'postId' })
-Comment.belongsTo(Post, { foreignKey: 'postId' })
-User.hasMany(Comment, { foreignKey: 'userId' })
-Comment.belongsTo(User, { foreignKey: 'userId' })
-
-export { Comment }
+export { Comment };

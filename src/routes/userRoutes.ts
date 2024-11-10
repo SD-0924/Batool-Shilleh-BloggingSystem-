@@ -1,26 +1,16 @@
-import { Router, Request, Response } from 'express'
-import UserController from '../controllers/UserController'
+// src/routes/userRoutes.ts
+import express from 'express';
+import userController from '../controllers/UserController';
+import userValidation from '../validations/userValidation';
+import { validate } from '../utils/validationUtils';
+import authMiddleware from '../middlewares/authMiddleware';
 
-const router = Router()
+const router = express.Router();
 
-router.get('/', async (req: Request, res: Response) => {
-  await UserController.getAllUsers(req, res)
-})
+router.post('/register', userValidation.createUser(), userController.createUser);
+router.post('/login', userValidation.loginUser(), userController.loginUser);
+router.get('/profile', authMiddleware, userController.getProfile);
+router.put('/profile', authMiddleware, userController.updateProfile);
+router.get('/', authMiddleware, userController.getAllUsers);
 
-router.get('/:userId', async (req: Request, res: Response) => {
-  await UserController.getUserById(req, res)
-})
-
-router.post('/', async (req: Request, res: Response) => {
-  await UserController.createUser(req, res)
-})
-
-router.put('/:userId', async (req: Request, res: Response) => {
-  await UserController.updateUser(req, res)
-})
-
-router.delete('/:userId', async (req: Request, res: Response) => {
-  await UserController.deleteUser(req, res)
-})
-
-export default router
+export default router;

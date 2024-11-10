@@ -1,17 +1,25 @@
-import {Category} from '../models/categoryModel'
-import { logError, logInfo } from '../utils/logger'
+import categoryRepository from '../repositories/categoryRepository';
 
 class CategoryService {
-  async createCategory(name: string) {
-    try {
-      const category = await Category.create({ name })
-      logInfo('Category created successfully')
-      return category
-    } catch (err) {
-      logError(err.message)
-      throw new Error('Error creating category')
+    async createCategory(data: any) {
+        return await categoryRepository.createCategory(data);
     }
-  }
+
+    async findAllCategories() {
+        return await categoryRepository.findAllCategories();
+    }
+
+    async findCategoryById(id: number) {
+        return await categoryRepository.findCategoryById(id);
+    }
+
+    async updateCategory(id: number, data: any) {
+        return await categoryRepository.updateCategory(id, data);
+    }
+
+    async deleteCategory(id: number) {
+        return await categoryRepository.deleteCategory(id);
+    }
 }
 
-export default new CategoryService()
+export default new CategoryService();

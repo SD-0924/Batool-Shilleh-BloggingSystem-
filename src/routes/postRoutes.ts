@@ -1,26 +1,16 @@
-import { Router, Request, Response } from 'express'
-import PostController from '../controllers/PostController'
+// src/routes/postRoutes.ts
+import express from 'express';
+import postController from '../controllers/PostController';
+import postValidation from '../validations/postValidation';
+import { validate } from '../utils/validationUtils';
+import authMiddleware from '../middlewares/authMiddleware';
 
-const router = Router()
+const router = express.Router();
 
-router.get('/', async (req: Request, res: Response) => {
-  await PostController.getAllPosts(req, res)
-})
+router.post('/', authMiddleware, postValidation.createPost(), postController.createPost);
+router.get('/', postController.getAllPosts);
+router.get('/:id', postController.getPostById);
+router.put('/:id', authMiddleware, postValidation.updatePost(), postController.updatePost);
+router.delete('/:id', authMiddleware, postController.deletePost);
 
-router.get('/:postId', async (req: Request, res: Response) => {
-  await PostController.getPostById(req, res)
-})
-
-router.post('/', async (req: Request, res: Response) => {
-  await PostController.createPost(req, res)
-})
-
-router.put('/:postId', async (req: Request, res: Response) => {
-  await PostController.updatePost(req, res)
-})
-
-router.delete('/:postId', async (req: Request, res: Response) => {
-  await PostController.deletePost(req, res)
-})
-
-export default router
+export default router;

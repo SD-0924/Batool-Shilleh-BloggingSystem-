@@ -1,28 +1,35 @@
-import { DataTypes, Model, Optional } from 'sequelize'
+import { DataTypes, Model } from 'sequelize';
+import bcrypt from 'bcryptjs';
 import  sequelize  from '../config/db'
+import {Post} from './Post';
+import {Comment} from './Comment';
 
-interface UserAttributes {
-    id: number
-    username: string
-    email: string
-    password: string
-  }
-  
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+class User extends Model {
+  public id!: number;
+  public username!: string;
+  public email!: string;
+  public password!: string;
 
-class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-    public id!: number
-    public username!: string
-    public email!: string
-    public password!: string
+  public posts!: Post[];
+  public comments!: Comment[];
+
+  static hashPassword(instance: User) {
+    if (instance.changed('password')) {
+      instance.password = bcrypt.hashSync(instance.password, 10);
+    }
   }
+
+  validatePassword(password: string) {
+    return bcrypt.compareSync(password, this.password);
+  }
+}
 
   User.init(
     {
       id: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
       },
       username: {
         type: DataTypes.STRING,
@@ -42,6 +49,10 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
       sequelize,
       tableName: 'users',
     }
-  )  
+  );
 
-  export { User }
+  User.beforeCreate(User.hashPassword);
+  User.beforeUpdate(User.hashPassword);
+
+
+export { User };

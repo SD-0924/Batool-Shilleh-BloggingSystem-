@@ -1,31 +1,19 @@
-import { DataTypes, Model, Optional } from 'sequelize'
-import sequelize from '../config/db'
-import { User } from './User'
-import { Category } from './categoryModel'
-import  {Comment}  from './commentModel'
+import { DataTypes, Model } from 'sequelize';
+import sequelize from '../config/db';
 
-interface PostAttributes {
-  id: number
-  userId: number
-  content: string
-  title: string
-}
-
-interface PostCreationAttributes extends Optional<PostAttributes, 'id'> {}
-
-class Post extends Model<PostAttributes, PostCreationAttributes> implements PostAttributes {
-  public id!: number
-  public title!: string
-  public content!: string
-  public userId!: number
+class Post extends Model {
+  public id!: number;
+  public title!: string;
+  public content!: string;
+  public userId!: number;
 }
 
 Post.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
       primaryKey: true,
+      autoIncrement: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -38,28 +26,14 @@ Post.init(
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: User,
-        key: 'id',
-      },
     },
   },
   {
     sequelize,
     tableName: 'posts',
+    timestamps: true,
+    modelName: 'Post',
   }
-)
+);
 
-User.hasMany(Post, { foreignKey: 'userId' })
-Post.belongsTo(User, { foreignKey: 'userId' })
-
-Post.belongsToMany(Category, { through: 'PostCategories' })
-Category.belongsToMany(Post, { through: 'PostCategories' })
-
-User.hasMany(Post, { foreignKey: 'userId' })
-Post.belongsTo(User, { foreignKey: 'userId' })
-
-Post.hasMany(Comment, { foreignKey: 'postId' })
-Comment.belongsTo(Post, { foreignKey: 'postId' })
-
-export { Post }
+export { Post };

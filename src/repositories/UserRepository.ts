@@ -1,33 +1,33 @@
-import {User} from '../models/User'
+import { User } from '../models/User';
 
 class UserRepository {
+  async createUser(data: any) {
+    return await User.create(data);  
+  }
 
-    async getAllUsers() {
-        return await User.findAll()
-    }
+  async findUserByEmail(email: string) {
+    return await User.findOne({ where: { email } });
+  }
 
-    async getUserById(userId: number) {
-        return await User.findByPk(userId)
-    }
+  async findUserById(id: number) {
+    return await User.findByPk(id);
+  }
 
-    async createUser(userData: any) {
-        return await User.create(userData)
+  async updateUser(id: number, data: any) {
+    const user = await User.findByPk(id);
+    if (user) {
+      return await user.update(data);
     }
+    return null;
+  }
 
-    async updateUser(userId: number, userData: any) {
-        const user = await User.findByPk(userId)
-        if (user) {
-          return await user.update(userData)
-        }
-        return null
+  async deleteUser(id: number) {
+    const user = await User.findByPk(id);
+    if (user) {
+      return await user.destroy();
     }
-
-    async deleteUser(userId: number) {
-        const user = await User.findByPk(userId)
-        if (user) {
-          return await user.destroy()
-        }
-        return null
-    }
+    return null;
+  }
 }
-export default new UserRepository()
+
+export default new UserRepository();

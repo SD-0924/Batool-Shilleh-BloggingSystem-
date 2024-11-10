@@ -1,9 +1,14 @@
-import { Router } from 'express'
+import express from 'express'
 import commentController from '../controllers/commentController'
+import commentValidation from '../validations/commentValidation'
+import { validate } from '../utils/validationUtils'
+import authMiddleware from '../middlewares/authMiddleware'
 
-const commentsRouter = Router()
+const router = express.Router();
 
-commentsRouter.get('/posts/:postId/comments', commentController.getCommentsByPost)
-commentsRouter.post('/posts/:postId/comments', commentController.createComment)
+router.post('/', authMiddleware, commentValidation.createComment(), commentController.createComment);
+router.get('/:postId', commentController.getAllCommentsByPost);
+router.put('/:id', authMiddleware, commentController.updateComment);
+router.delete('/:id', authMiddleware, commentController.deleteComment);
 
-export default commentsRouter
+export default router;

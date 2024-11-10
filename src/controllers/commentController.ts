@@ -1,34 +1,53 @@
-import { Request, Response, NextFunction } from 'express'
-import CommentService from '../services/CommentService'
-import { commentValidationSchema } from '../validations/commentValidation'
+import { Request, Response } from 'express';
+import commentService from '../services/CommentService';
 
 class CommentController {
-  async getCommentsByPost(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const postId = Number(req.params.postId)
-      const comments = await CommentService.getCommentsByPost(postId)
-      res.status(200).json(comments)
-    } catch (err) {
-      next(err)
-    }
-  }
+    async createComment(req: Request, res: Response) {
+        try {
+            const userId = req.user.id; 
 
-  async createComment(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const { error } = commentValidationSchema.validate(req.body)
-      if (error) {
-        res.status(400).json({ message: error.details[0].message })
-        return
-      }
+            if (!userId) {
+                 res.status(400).json({ message: 'User not authenticated' });
+            }
 
-      const postId = Number(req.params.postId)
-      const { userId, content } = req.body
-      const comment = await CommentService.createComment(postId, userId, content)
-      res.status(201).json(comment)
-    } catch (err) {
-      next(err)
+            const newComment = await commentService.createComment({
+                content: req.body.content,
+                postId: req.body.postId,
+                userId, 
+            });
+
+            res.status(201).json(newComment);
+        } catch (error) {
+            res.status(500).json({ message: 'Error creating comment', error });
+        }
     }
-  }
+
+    async getAllCommentsByPost(req: Request, res: Response) {
+        try {
+            const comments = await commentService.findAllCommentsByPost(Number(req.params.postId));
+            res.json(comments);
+        } catch (error) {
+            res.status(500).json({ message: 'Error fetching comments', error });
+        }
+    }
+
+    async updateComment(req: Request, res: Response) {
+        try {
+            const updatedComment = await commentService.updateComment(Number(req.params.id), req.body);
+            res.json(updatedComment);
+        } catch (error) {
+            res.status(500).json({ message: 'Error updating comment', error });
+        }
+    }
+
+    async deleteComment(req: Request, res: Response) {
+        try {
+            await commentService.deleteComment(Number(req.params.id));
+            res.json({ message: 'Comment deleted successfully' });
+        } catch (error) {
+            res.status(500).json({ message: 'Error deleting comment', error });
+        }
+    }
 }
 
-export default new CommentController()
+export default new CommentController();

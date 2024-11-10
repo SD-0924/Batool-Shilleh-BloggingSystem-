@@ -1,13 +1,25 @@
-import { Category } from '../models/categoryModel'
+import { Category } from '../models/Category';
 
 class CategoryRepository {
-  async getAllCategories() {
-    return await Category.findAll()
-  }
+    async createCategory(data: any) {
+        return await Category.create(data);
+    }
 
-  async createCategory(name: string) {
-    return await Category.create({ name })
-  }
+    async findAllCategories() {
+        return await Category.findAll();
+    }
+
+    async findCategoryById(id: number) {
+        return await Category.findByPk(id);
+    }
+
+    async updateCategory(id: number, data: any) {
+        return await Category.update(data, { where: { id } });
+    }
+
+    async deleteCategory(id: number) {
+        return await Category.destroy({ where: { id } });
+    }
 }
 
-export default new CategoryRepository()
+export default new CategoryRepository();

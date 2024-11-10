@@ -1,28 +1,25 @@
-import {Comment} from '../models/commentModel'
-import { logError, logInfo } from '../utils/logger'
+import commentRepository from '../repositories/commentRepository';
 
 class CommentService {
-  async getCommentsByPost(postId: number) {
-    try {
-      const comments = await Comment.findAll({ where: { postId } })
-      logInfo(`Fetched comments for post ID ${postId}`)
-      return comments
-    } catch (err) {
-      logError(err.message)
-      throw new Error('Error fetching comments')
+    async createComment(data: any) {
+        return await commentRepository.createComment(data);
     }
-  }
 
-  async createComment(postId: number, userId: number, content: string) {
-    try {
-      const comment = await Comment.create({ postId, userId, content })
-      logInfo('Comment created successfully')
-      return comment;
-    } catch (err) {
-      logError(err.message)
-      throw new Error('Error creating comment')
+    async findAllCommentsByPost(postId: number) {
+        return await commentRepository.findAllCommentsByPost(postId);
     }
-  }
+
+    async findCommentById(id: number) {
+        return await commentRepository.findCommentById(id);
+    }
+
+    async updateComment(id: number, data: any) {
+        return await commentRepository.updateComment(id, data);
+    }
+
+    async deleteComment(id: number) {
+        return await commentRepository.deleteComment(id);
+    }
 }
 
-export default new CommentService()
+export default new CommentService();

@@ -1,30 +1,25 @@
-import PostRepository from '../repositories/PostRepository'
+import postRepository from '../repositories/PostRepository';
 
 class PostService {
-  async getAllPosts() {
-    return await PostRepository.getAllPosts()
-  }
-
-  async getPostById(postId: number) {
-    return await PostRepository.getPostById(postId)
-  }
-
-  async createPost(postData: any) {
-    return await PostRepository.createPost(postData)
-  }
-
-  async updatePost(postId: number, postData: any) {
-    return await PostRepository.updatePost(postId, postData)
-  }
-
-  async deletePost(postId: number) {
-    const post = await PostRepository.getPostById(postId)
-    if (post) {
-      await PostRepository.deletePost(postId)
-      return true
+    async createPost(data: any) {
+        return await postRepository.createPost(data);
     }
-    return false
-  }
+
+    async findAllPosts() {
+        return await postRepository.findAllPosts();
+    }
+
+    async findPostById(id: number) {
+        return await postRepository.findPostById(id);
+    }
+
+    async updatePost(id: number, data: any) {
+        return await postRepository.updatePost(id, data);
+    }
+
+    async deletePost(id: number) {
+        return await postRepository.deletePost(id);
+    }
 }
 
-export default new PostService()
+export default new PostService();

@@ -1,14 +1,20 @@
+import { body } from 'express-validator'
 
-import Joi from 'joi'
+class UserValidation {
+    createUser() {
+        return [
+            body('username').isString().withMessage('Username must be a string'),
+            body('email').isEmail().withMessage('Email must be valid'),
+            body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+        ]
+    }
 
-export const createUserValidation = Joi.object({
-  username: Joi.string().min(3).max(30).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-})
+    loginUser() {
+        return [
+            body('email').isEmail().withMessage('Email must be valid'),
+            body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+        ]
+    }
+}
 
-export const updateUserValidation = Joi.object({
-  username: Joi.string().min(3).max(30),
-  email: Joi.string().email(),
-  password: Joi.string().min(6),
-})
+export default new UserValidation()

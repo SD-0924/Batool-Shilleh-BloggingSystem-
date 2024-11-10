@@ -1,13 +1,11 @@
-import Joi from 'joi'
+import { body } from 'express-validator'
 
-const categoryValidationSchema = Joi.object({
-  name: Joi.string().min(3).max(50).required().messages({
-    'string.base': 'Category name must be a string',
-    'string.empty': 'Category name cannot be empty',
-    'string.min': 'Category name must be at least 3 characters long',
-    'string.max': 'Category name cannot exceed 50 characters',
-    'any.required': 'Category name is required'
-  }),
-})
+class CategoryValidation {
+    createCategory() {
+        return [
+            body('name').isString().withMessage('Category name must be a string'),
+        ]
+    }
+}
 
-export { categoryValidationSchema }
+export default new CategoryValidation()

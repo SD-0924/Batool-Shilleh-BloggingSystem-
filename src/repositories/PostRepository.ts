@@ -1,34 +1,25 @@
-import { Post } from '../models/Post'
-import {User} from '../models/User'
+import { Post } from '../models/Post';
 
 class PostRepository {
-  async getAllPosts() {
-    return await Post.findAll({ include: [{ model: User }] })
-  }
-
-  async getPostById(postId: number) {
-    return await Post.findByPk(postId, { include: [{ model: User }] })
-  }
-
-  async createPost(postData: any) {
-    return await Post.create(postData)
-  }
-
-  async updatePost(postId: number, postData: any) {
-    const post = await Post.findByPk(postId)
-    if (post) {
-      return await post.update(postData)
+    async createPost(data: any) {
+        return await Post.create(data);
     }
-    return null
-  }
 
-  async deletePost(postId: number) {
-    const post = await Post.findByPk(postId)
-    if (post) {
-      return await post.destroy()
+    async findAllPosts() {
+        return await Post.findAll();
     }
-    return null
-  }
+
+    async findPostById(id: number) {
+        return await Post.findByPk(id);
+    }
+
+    async updatePost(id: number, data: any) {
+        return await Post.update(data, { where: { id } });
+    }
+
+    async deletePost(id: number) {
+        return await Post.destroy({ where: { id } });
+    }
 }
 
-export default new PostRepository()
+export default new PostRepository();

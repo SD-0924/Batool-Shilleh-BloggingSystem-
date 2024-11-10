@@ -1,15 +1,19 @@
-import Joi from 'joi'
+import { body } from 'express-validator'
 
-export const postValidationSchema = Joi.object({
-  title: Joi.string().min(3).required().messages({
-    'string.base': '"title" should be a string',
-    'string.min': '"title" should have at least 3 characters',
-    'any.required': '"title" is a required field'
-  }),
-  content: Joi.string().min(5).required().messages({
-    'string.base': '"content" should be a string',
-    'string.min': '"content" should have at least 5 characters',
-    'any.required': '"content" is a required field'
-  }),
-})
+class PostValidation {
+    createPost() {
+        return [
+            body('title').isString().withMessage('Title must be a string'),
+            body('content').isString().withMessage('Content must be a string'),
+        ]
+    }
 
+    updatePost() {
+        return [
+            body('title').optional().isString().withMessage('Title must be a string'),
+            body('content').optional().isString().withMessage('Content must be a string'),
+        ]
+    }
+}
+
+export default new PostValidation()
