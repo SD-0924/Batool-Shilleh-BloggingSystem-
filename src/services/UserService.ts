@@ -27,7 +27,7 @@ class UserService {
       username: user.username,
       email: user.email,
     };
-    const secret = "SDFLJLWEIUR3987REWR398R7WERLKSJDFLKSJF823";
+    const secret =  process.env.JWT_SECRET || "SDFLJLWEIUR3987REWR398R7WERLKSJDFLKSJF823";
     if (!secret) {
       throw new Error('JWT_SECRET environment variable is not set');
     }
